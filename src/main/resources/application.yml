@@ -1,0 +1,21 @@
+server:
+  port: ${PORT}
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS}
+    consumer:
+      group-id: sparks-api
+    topics:
+      user:
+        create: create-user-topic
+        find-all: find-all-users-topic
+        find-by-id: find-user-by-id-topic
+        update-by-id: update-user-by-id-topic
+        delete-by-id: delete-user-by-id-topic
+    reply-topics:
+      user:
+        create: create-user-reply-topic
+        find-all: find-all-users-reply-topic
+        find-by-id: find-user-by-id-reply-topic
+        update-by-id: update-user-by-id-reply-topic
+        delete-by-id: delete-user-by-id-reply-topic
