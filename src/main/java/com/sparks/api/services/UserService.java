@@ -14,24 +14,24 @@ import com.sparks.api.producers.UserProducer;
 public class UserService {
 	@Autowired
 	private UserProducer userProducer;
-	
-	public User create(User user) throws InterruptedException, ExecutionException, TimeoutException {
-		return this.userProducer.create(user);
+
+	public User createUser(User user) throws InterruptedException, ExecutionException, TimeoutException {
+		return this.userProducer.createUser(user);
 	}
-	
-	public List<User> findAll() throws InterruptedException, ExecutionException, TimeoutException {
-		return this.userProducer.findAll();
+
+	public List<User> findAllUsers() throws InterruptedException, ExecutionException, TimeoutException {
+		return this.userProducer.findAllUsers();
 	}
-	
-	public User findById(String id) throws InterruptedException, ExecutionException, TimeoutException {
-		return this.userProducer.findById(id);
+
+	public User findUserById(String id) throws InterruptedException, ExecutionException, TimeoutException {
+		return this.userProducer.findUserById(id);
 	}
-	
-	public User updateById(String id, User user) throws InterruptedException, ExecutionException, TimeoutException {
-		return this.userProducer.updateById(id, user);
+
+	public User updateUserById(String id, User user) throws InterruptedException, ExecutionException, TimeoutException {
+		return this.userProducer.updateUserById(id, user);
 	}
-	
-	public User deleteById(String id) throws InterruptedException, ExecutionException, TimeoutException {
-		return this.userProducer.deleteById(id);
+
+	public User deleteUserById(String id) throws InterruptedException, ExecutionException, TimeoutException {
+		return this.userProducer.deleteUserById(id);
 	}
 }

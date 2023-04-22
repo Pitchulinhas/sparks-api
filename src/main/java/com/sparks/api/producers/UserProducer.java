@@ -36,13 +36,13 @@ public class UserProducer {
 
 	@Value("${spring.kafka.reply-topics.user.find-by-id}")
 	private String findUserByIdReplyTopic;
-	
+
 	@Value("${spring.kafka.topics.user.update-by-id}")
 	private String updateUserByIdTopic;
 
 	@Value("${spring.kafka.reply-topics.user.update-by-id}")
 	private String updateUserByIdReplyTopic;
-	
+
 	@Value("${spring.kafka.topics.user.delete-by-id}")
 	private String deleteUserByIdTopic;
 
@@ -51,13 +51,13 @@ public class UserProducer {
 
 	private Gson gson;
 	private ReplyingKafkaTemplate<String, String, String> kafkaTemplate;
-	
+
 	public UserProducer(ReplyingKafkaTemplate<String, String, String> kafkaTemplate) {
 		this.gson = new Gson();
 		this.kafkaTemplate = kafkaTemplate;
 	}
 
-	public User create(User user) throws InterruptedException, ExecutionException, TimeoutException {
+	public User createUser(User user) throws InterruptedException, ExecutionException, TimeoutException {
 		String userAsString = this.gson.toJson(user);
 
 		RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
@@ -75,7 +75,7 @@ public class UserProducer {
 		return userCreated;
 	}
 
-	public List<User> findAll() throws InterruptedException, ExecutionException, TimeoutException {
+	public List<User> findAllUsers() throws InterruptedException, ExecutionException, TimeoutException {
 		RequestReplyTypedMessageFuture<String, String, List<User>> usersFut = kafkaTemplate.sendAndReceive(
 				MessageBuilder.withPayload("getUsers").setHeader(KafkaHeaders.TOPIC, findAllUsersTopic)
 						.setHeader(KafkaHeaders.REPLY_TOPIC, findAllUsersReplyTopic).build(),
@@ -91,7 +91,7 @@ public class UserProducer {
 		return users;
 	}
 
-	public User findById(String id)
+	public User findUserById(String id)
 			throws InterruptedException, ExecutionException, TimeoutException, IllegalArgumentException {
 		RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
 				MessageBuilder.withPayload(id).setHeader(KafkaHeaders.TOPIC, findUserByIdTopic)
@@ -107,10 +107,10 @@ public class UserProducer {
 
 		return userFound;
 	}
-	
-	public User updateById(String id, User user) throws InterruptedException, ExecutionException, TimeoutException {
+
+	public User updateUserById(String id, User user) throws InterruptedException, ExecutionException, TimeoutException {
 		user.setId(id);
-		
+
 		String userAsString = this.gson.toJson(user);
 
 		RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
@@ -127,8 +127,8 @@ public class UserProducer {
 
 		return userCreated;
 	}
-	
-	public User deleteById(String id)
+
+	public User deleteUserById(String id)
 			throws InterruptedException, ExecutionException, TimeoutException, IllegalArgumentException {
 		RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
 				MessageBuilder.withPayload(id).setHeader(KafkaHeaders.TOPIC, deleteUserByIdTopic)

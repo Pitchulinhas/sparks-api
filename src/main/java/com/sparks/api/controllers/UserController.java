@@ -1,6 +1,8 @@
 package com.sparks.api.controllers;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,29 +24,35 @@ import com.sparks.api.services.UserService;
 public class UserController {
 	@Autowired
 	private UserService userService;
-
+	
 	@PostMapping
-	public User create(@RequestBody() User user) {
-		try {
-			return this.userService.create(user);
-		} catch (Exception ex) {
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Aconteceu um erro interno");
-		}
+	public User createUser(@RequestBody() User user) throws InterruptedException, ExecutionException, TimeoutException {
+		return this.userService.createUser(user);
 	}
 
 	@GetMapping
-	public List<User> findAll() {
+	public List<User> findAllUsers() {
 		try {
-			return this.userService.findAll();
+			return this.userService.findAllUsers();
+		} catch (ResponseStatusException ex) {
+			throw ex;
 		} catch (Exception ex) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Aconteceu um erro interno");
 		}
 	}
 
 	@GetMapping("/{id}")
-	public User findById(@PathVariable("id") String id) {
+	public User findUserById(@PathVariable("id") String id) {
 		try {
-			return this.userService.findById(id);
+			User userFound = this.userService.findUserById(id);
+
+			if (userFound == null) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
+			}
+
+			return userFound;
+		} catch (ResponseStatusException ex) {
+			throw ex;
 		} catch (Exception ex) {
 			if (ex.toString().contains("Payload must not be null")) {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
@@ -53,11 +61,19 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Aconteceu um erro interno");
 		}
 	}
-	
+
 	@PutMapping("/{id}")
-	public User updatById(@PathVariable("id") String id, @RequestBody User user) {
+	public User updateUserById(@PathVariable("id") String id, @RequestBody User user) {
 		try {
-			return this.userService.updateById(id, user);
+			User userUpdated = this.userService.updateUserById(id, user);
+
+			if (userUpdated == null) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
+			}
+
+			return userUpdated;
+		} catch (ResponseStatusException ex) {
+			throw ex;
 		} catch (Exception ex) {
 			if (ex.toString().contains("Payload must not be null")) {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
@@ -66,17 +82,26 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Aconteceu um erro interno");
 		}
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public User deleteById(@PathVariable("id") String id) {
+	public User deleteUserById(@PathVariable("id") String id) {
 		try {
-			return this.userService.deleteById(id);
+			User userDeleted = this.userService.deleteUserById(id);
+
+			if (userDeleted == null) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
+			}
+
+			return userDeleted;
+		} catch (ResponseStatusException ex) {
+			throw ex;
 		} catch (Exception ex) {
 			if (ex.toString().contains("Payload must not be null")) {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
 			}
 
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Aconteceu um erro interno");
+
 		}
 	}
 }
