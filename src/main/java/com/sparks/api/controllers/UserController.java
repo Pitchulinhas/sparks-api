@@ -24,10 +24,16 @@ import com.sparks.api.services.UserService;
 public class UserController {
 	@Autowired
 	private UserService userService;
-	
+
 	@PostMapping
 	public User createUser(@RequestBody() User user) throws InterruptedException, ExecutionException, TimeoutException {
-		return this.userService.createUser(user);
+		try {
+			return this.userService.createUser(user);
+		} catch (ResponseStatusException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Aconteceu um erro interno");
+		}
 	}
 
 	@GetMapping
@@ -54,10 +60,6 @@ public class UserController {
 		} catch (ResponseStatusException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			if (ex.toString().contains("Payload must not be null")) {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
-			}
-
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Aconteceu um erro interno");
 		}
 	}
@@ -75,10 +77,6 @@ public class UserController {
 		} catch (ResponseStatusException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			if (ex.toString().contains("Payload must not be null")) {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
-			}
-
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Aconteceu um erro interno");
 		}
 	}
@@ -96,12 +94,7 @@ public class UserController {
 		} catch (ResponseStatusException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			if (ex.toString().contains("Payload must not be null")) {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
-			}
-
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Aconteceu um erro interno");
-
 		}
 	}
 }

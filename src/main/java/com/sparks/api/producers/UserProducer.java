@@ -93,55 +93,79 @@ public class UserProducer {
 
 	public User findUserById(String id)
 			throws InterruptedException, ExecutionException, TimeoutException, IllegalArgumentException {
-		RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
-				MessageBuilder.withPayload(id).setHeader(KafkaHeaders.TOPIC, findUserByIdTopic)
-						.setHeader(KafkaHeaders.REPLY_TOPIC, findUserByIdReplyTopic).build(),
-				new ParameterizedTypeReference<User>() {
-				});
+		try {
+			RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
+					MessageBuilder.withPayload(id).setHeader(KafkaHeaders.TOPIC, findUserByIdTopic)
+							.setHeader(KafkaHeaders.REPLY_TOPIC, findUserByIdReplyTopic).build(),
+					new ParameterizedTypeReference<User>() {
+					});
 
-		userFut.getSendFuture().get(10, TimeUnit.SECONDS);
+			userFut.getSendFuture().get(10, TimeUnit.SECONDS);
 
-		Message<User> typedUser = userFut.get(30, TimeUnit.SECONDS);
+			Message<User> typedUser = userFut.get(30, TimeUnit.SECONDS);
 
-		User userFound = typedUser.getPayload();
+			User userFound = typedUser.getPayload();
 
-		return userFound;
+			return userFound;
+		} catch (Exception ex) {
+			if (ex.toString().contains("Payload must not be null")) {
+				return null;
+			}
+
+			throw ex;
+		}
 	}
 
 	public User updateUserById(String id, User user) throws InterruptedException, ExecutionException, TimeoutException {
-		user.setId(id);
+		try {
+			user.setId(id);
 
-		String userAsString = this.gson.toJson(user);
+			String userAsString = this.gson.toJson(user);
 
-		RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
-				MessageBuilder.withPayload(userAsString).setHeader(KafkaHeaders.TOPIC, updateUserByIdTopic)
-						.setHeader(KafkaHeaders.REPLY_TOPIC, updateUserByIdReplyTopic).build(),
-				new ParameterizedTypeReference<User>() {
-				});
+			RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
+					MessageBuilder.withPayload(userAsString).setHeader(KafkaHeaders.TOPIC, updateUserByIdTopic)
+							.setHeader(KafkaHeaders.REPLY_TOPIC, updateUserByIdReplyTopic).build(),
+					new ParameterizedTypeReference<User>() {
+					});
 
-		userFut.getSendFuture().get(10, TimeUnit.SECONDS);
+			userFut.getSendFuture().get(10, TimeUnit.SECONDS);
 
-		Message<User> typedUser = userFut.get(30, TimeUnit.SECONDS);
+			Message<User> typedUser = userFut.get(30, TimeUnit.SECONDS);
 
-		User userCreated = typedUser.getPayload();
+			User userCreated = typedUser.getPayload();
 
-		return userCreated;
+			return userCreated;
+		} catch (Exception ex) {
+			if (ex.toString().contains("Payload must not be null")) {
+				return null;
+			}
+
+			throw ex;
+		}
 	}
 
 	public User deleteUserById(String id)
 			throws InterruptedException, ExecutionException, TimeoutException, IllegalArgumentException {
-		RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
-				MessageBuilder.withPayload(id).setHeader(KafkaHeaders.TOPIC, deleteUserByIdTopic)
-						.setHeader(KafkaHeaders.REPLY_TOPIC, deleteUserByIdReplyTopic).build(),
-				new ParameterizedTypeReference<User>() {
-				});
+		try {
+			RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
+					MessageBuilder.withPayload(id).setHeader(KafkaHeaders.TOPIC, deleteUserByIdTopic)
+							.setHeader(KafkaHeaders.REPLY_TOPIC, deleteUserByIdReplyTopic).build(),
+					new ParameterizedTypeReference<User>() {
+					});
 
-		userFut.getSendFuture().get(10, TimeUnit.SECONDS);
+			userFut.getSendFuture().get(10, TimeUnit.SECONDS);
 
-		Message<User> typedUser = userFut.get(30, TimeUnit.SECONDS);
+			Message<User> typedUser = userFut.get(30, TimeUnit.SECONDS);
 
-		User userFound = typedUser.getPayload();
+			User userFound = typedUser.getPayload();
 
-		return userFound;
+			return userFound;
+		} catch (Exception ex) {
+			if (ex.toString().contains("Payload must not be null")) {
+				return null;
+			}
+
+			throw ex;
+		}
 	}
 }
