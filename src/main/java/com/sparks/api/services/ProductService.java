@@ -5,19 +5,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sparks.api.entities.User;
+import com.sparks.api.entities.Product;
 import com.sparks.api.exceptions.BadRequestException;
 import com.sparks.api.exceptions.NotFoundException;
-import com.sparks.api.producers.UserProducer;
+import com.sparks.api.producers.ProductProducer;
 import com.sparks.api.responses.ServiceResponse;
 
 @Service
-public class UserService {
+public class ProductService {
 	@Autowired
-	private UserProducer userProducer;
+	private ProductProducer productProducer;
 
-	public User createUser(User createUserInput) throws Exception {
-		ServiceResponse<User> response = this.userProducer.createUser(createUserInput);
+	public Product createProduct(Product createProductInput) throws Exception {
+		ServiceResponse<Product> response = this.productProducer.createProduct(createProductInput);
 		
 		if (response.getErrorMessage() != null) {
 			throw new BadRequestException(response.getErrorMessage());
@@ -26,8 +26,8 @@ public class UserService {
 		return response.getData();
 	}
 
-	public List<User> findAllUsers() throws Exception {
-		ServiceResponse<List<User>> response = this.userProducer.findAllUsers();
+	public List<Product> findAllProducts() throws Exception {
+		ServiceResponse<List<Product>> response = this.productProducer.findAllProducts();
 		
 		if (response.getErrorMessage() != null) {
 			throw new BadRequestException(response.getErrorMessage());
@@ -36,43 +36,43 @@ public class UserService {
 		return response.getData();
 	}
 
-	public User findUserById(String id) throws Exception {
-		ServiceResponse<User> response = this.userProducer.findUserById(id);
+	public Product findProductById(String id) throws Exception {
+		ServiceResponse<Product> response = this.productProducer.findProductById(id);
 		
 		if (response.getErrorMessage() != null) {
 			throw new BadRequestException(response.getErrorMessage());
 		}
 		
 		if (response.getData() == null) {
-			throw new NotFoundException("Usuário não encontrado");
+			throw new NotFoundException("Produto não encontrado");
 		}
 		
 		return response.getData();
 	}
 
-	public User updateUserById(String id, User updateUserInput) throws Exception {
-		ServiceResponse<User> response = this.userProducer.updateUserById(id, updateUserInput);
+	public Product updateProductById(String id, Product updateProductInput) throws Exception {
+		ServiceResponse<Product> response = this.productProducer.updateProductById(id, updateProductInput);
 		
 		if (response.getErrorMessage() != null) {
 			throw new BadRequestException(response.getErrorMessage());
 		}
 		
 		if (response.getData() == null) {
-			throw new NotFoundException("Usuário não encontrado");
+			throw new NotFoundException("Produto não encontrado");
 		}
 		
 		return response.getData();
 	}
 
-	public User deleteUserById(String id) throws Exception {
-		ServiceResponse<User> response = this.userProducer.deleteUserById(id);
+	public Product deleteProductById(String id) throws Exception {
+		ServiceResponse<Product> response = this.productProducer.deleteProductById(id);
 		
 		if (response.getErrorMessage() != null) {
 			throw new BadRequestException(response.getErrorMessage());
 		}
 		
 		if (response.getData() == null) {
-			throw new NotFoundException("Usuário não encontrado");
+			throw new NotFoundException("Produto não encontrado");
 		}
 		
 		return response.getData();

@@ -47,6 +47,21 @@ public class KafkaConfig {
 	@Value("${spring.kafka.reply-topics.user.delete-by-id}")
 	private String deleteUserByIdReplyTopic;
 
+	@Value("${spring.kafka.reply-topics.product.create}")
+	private String createProductReplyTopic;
+
+	@Value("${spring.kafka.reply-topics.product.find-all}")
+	private String findAllProductsReplyTopic;
+
+	@Value("${spring.kafka.reply-topics.product.find-by-id}")
+	private String findProductByIdReplyTopic;
+
+	@Value("${spring.kafka.reply-topics.product.update-by-id}")
+	private String updateProductByIdReplyTopic;
+
+	@Value("${spring.kafka.reply-topics.product.delete-by-id}")
+	private String deleteProductByIdReplyTopic;
+
 	@Bean
 	Map<String, Object> producerConfigs() {
 		Map<String, Object> props = new HashMap<>();
@@ -95,7 +110,9 @@ public class KafkaConfig {
 	@Bean
 	KafkaMessageListenerContainer<String, String> replyContainer(ConsumerFactory<String, String> cf) {
 		ContainerProperties containerProperties = new ContainerProperties(createUserReplyTopic, findAllUsersReplyTopic,
-				findUserByIdReplyTopic, updateUserByIdReplyTopic, deleteUserByIdReplyTopic);
+				findUserByIdReplyTopic, updateUserByIdReplyTopic, deleteUserByIdReplyTopic, createProductReplyTopic,
+				findAllProductsReplyTopic, findProductByIdReplyTopic, updateProductByIdReplyTopic,
+				deleteProductByIdReplyTopic);
 		return new KafkaMessageListenerContainer<>(cf, containerProperties);
 	}
 

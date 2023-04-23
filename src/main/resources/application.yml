@@ -12,6 +12,12 @@ spring:
         find-by-id: find-user-by-id-topic
         update-by-id: update-user-by-id-topic
         delete-by-id: delete-user-by-id-topic
+      product:
+        create: create-product-topic
+        find-all: find-all-products-topic
+        find-by-id: find-product-by-id-topic
+        update-by-id: update-product-by-id-topic
+        delete-by-id: delete-product-by-id-topic
     reply-topics:
       user:
         create: create-user-reply-topic
@@ -19,3 +25,9 @@ spring:
         find-by-id: find-user-by-id-reply-topic
         update-by-id: update-user-by-id-reply-topic
         delete-by-id: delete-user-by-id-reply-topic
+      product:
+        create: create-product-reply-topic
+        find-all: find-all-products-reply-topic
+        find-by-id: find-product-by-id-reply-topic
+        update-by-id: update-product-by-id-reply-topic
+        delete-by-id: delete-product-by-id-reply-topic

@@ -1,10 +1,9 @@
 package com.sparks.api.producers;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.sparks.api.entities.User;
+import com.sparks.api.responses.ServiceResponse;
 
 @Component
 public class UserProducer {
@@ -49,123 +49,102 @@ public class UserProducer {
 	@Value("${spring.kafka.reply-topics.user.delete-by-id}")
 	private String deleteUserByIdReplyTopic;
 
-	private Gson gson;
+	@Autowired
 	private ReplyingKafkaTemplate<String, String, String> kafkaTemplate;
 
-	public UserProducer(ReplyingKafkaTemplate<String, String, String> kafkaTemplate) {
+	private Gson gson;
+
+	public UserProducer() {
 		this.gson = new Gson();
-		this.kafkaTemplate = kafkaTemplate;
 	}
 
-	public User createUser(User user) throws InterruptedException, ExecutionException, TimeoutException {
-		String userAsString = this.gson.toJson(user);
+	public ServiceResponse<User> createUser(User createUserInput) throws Exception {
+		Message<String> message = MessageBuilder.withPayload(this.gson.toJson(createUserInput))
+				.setHeader(KafkaHeaders.TOPIC, createUserTopic)
+				.setHeader(KafkaHeaders.REPLY_TOPIC, createUserReplyTopic).build();
 
-		RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
-				MessageBuilder.withPayload(userAsString).setHeader(KafkaHeaders.TOPIC, createUserTopic)
-						.setHeader(KafkaHeaders.REPLY_TOPIC, createUserReplyTopic).build(),
-				new ParameterizedTypeReference<User>() {
-				});
+		ParameterizedTypeReference<ServiceResponse<User>> messageReturnType = new ParameterizedTypeReference<ServiceResponse<User>>() {
+		};
+
+		RequestReplyTypedMessageFuture<String, String, ServiceResponse<User>> userFut = kafkaTemplate
+				.sendAndReceive(message, messageReturnType);
 
 		userFut.getSendFuture().get(10, TimeUnit.SECONDS);
 
-		Message<User> typedUser = userFut.get(30, TimeUnit.SECONDS);
+		Message<ServiceResponse<User>> typedUser = userFut.get(30, TimeUnit.SECONDS);
 
-		User userCreated = typedUser.getPayload();
-
-		return userCreated;
+		return typedUser.getPayload();
 	}
 
-	public List<User> findAllUsers() throws InterruptedException, ExecutionException, TimeoutException {
-		RequestReplyTypedMessageFuture<String, String, List<User>> usersFut = kafkaTemplate.sendAndReceive(
-				MessageBuilder.withPayload("getUsers").setHeader(KafkaHeaders.TOPIC, findAllUsersTopic)
-						.setHeader(KafkaHeaders.REPLY_TOPIC, findAllUsersReplyTopic).build(),
-				new ParameterizedTypeReference<List<User>>() {
-				});
+	public ServiceResponse<List<User>> findAllUsers() throws Exception {
+		Message<String> message = MessageBuilder.withPayload("getUsers")
+				.setHeader(KafkaHeaders.TOPIC, findAllUsersTopic)
+				.setHeader(KafkaHeaders.REPLY_TOPIC, findAllUsersReplyTopic).build();
+
+		ParameterizedTypeReference<ServiceResponse<List<User>>> messageReturnType = new ParameterizedTypeReference<ServiceResponse<List<User>>>() {
+		};
+
+		RequestReplyTypedMessageFuture<String, String, ServiceResponse<List<User>>> usersFut = kafkaTemplate
+				.sendAndReceive(message, messageReturnType);
 
 		usersFut.getSendFuture().get(10, TimeUnit.SECONDS);
 
-		Message<List<User>> typedUsers = usersFut.get(20, TimeUnit.SECONDS);
+		Message<ServiceResponse<List<User>>> typedUsers = usersFut.get(20, TimeUnit.SECONDS);
 
-		List<User> users = typedUsers.getPayload();
-
-		return users;
+		return typedUsers.getPayload();
 	}
 
-	public User findUserById(String id)
-			throws InterruptedException, ExecutionException, TimeoutException, IllegalArgumentException {
-		try {
-			RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
-					MessageBuilder.withPayload(id).setHeader(KafkaHeaders.TOPIC, findUserByIdTopic)
-							.setHeader(KafkaHeaders.REPLY_TOPIC, findUserByIdReplyTopic).build(),
-					new ParameterizedTypeReference<User>() {
-					});
+	public ServiceResponse<User> findUserById(String id) throws Exception {
+		Message<String> message = MessageBuilder.withPayload(id).setHeader(KafkaHeaders.TOPIC, findUserByIdTopic)
+				.setHeader(KafkaHeaders.REPLY_TOPIC, findUserByIdReplyTopic).build();
 
-			userFut.getSendFuture().get(10, TimeUnit.SECONDS);
+		ParameterizedTypeReference<ServiceResponse<User>> messageReturnType = new ParameterizedTypeReference<ServiceResponse<User>>() {
+		};
 
-			Message<User> typedUser = userFut.get(30, TimeUnit.SECONDS);
+		RequestReplyTypedMessageFuture<String, String, ServiceResponse<User>> userFut = kafkaTemplate
+				.sendAndReceive(message, messageReturnType);
 
-			User userFound = typedUser.getPayload();
+		userFut.getSendFuture().get(10, TimeUnit.SECONDS);
 
-			return userFound;
-		} catch (Exception ex) {
-			if (ex.toString().contains("Payload must not be null")) {
-				return null;
-			}
+		Message<ServiceResponse<User>> typedUser = userFut.get(30, TimeUnit.SECONDS);
 
-			throw ex;
-		}
+		return typedUser.getPayload();
 	}
 
-	public User updateUserById(String id, User user) throws InterruptedException, ExecutionException, TimeoutException {
-		try {
-			user.setId(id);
+	public ServiceResponse<User> updateUserById(String id, User updateUserInput) throws Exception {
+		updateUserInput.setId(id);
 
-			String userAsString = this.gson.toJson(user);
+		Message<String> message = MessageBuilder.withPayload(this.gson.toJson(updateUserInput))
+				.setHeader(KafkaHeaders.TOPIC, updateUserByIdTopic)
+				.setHeader(KafkaHeaders.REPLY_TOPIC, updateUserByIdReplyTopic).build();
 
-			RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
-					MessageBuilder.withPayload(userAsString).setHeader(KafkaHeaders.TOPIC, updateUserByIdTopic)
-							.setHeader(KafkaHeaders.REPLY_TOPIC, updateUserByIdReplyTopic).build(),
-					new ParameterizedTypeReference<User>() {
-					});
+		ParameterizedTypeReference<ServiceResponse<User>> messageReturnType = new ParameterizedTypeReference<ServiceResponse<User>>() {
+		};
 
-			userFut.getSendFuture().get(10, TimeUnit.SECONDS);
+		RequestReplyTypedMessageFuture<String, String, ServiceResponse<User>> userFut = kafkaTemplate
+				.sendAndReceive(message, messageReturnType);
 
-			Message<User> typedUser = userFut.get(30, TimeUnit.SECONDS);
+		userFut.getSendFuture().get(10, TimeUnit.SECONDS);
 
-			User userCreated = typedUser.getPayload();
+		Message<ServiceResponse<User>> typedUser = userFut.get(30, TimeUnit.SECONDS);
 
-			return userCreated;
-		} catch (Exception ex) {
-			if (ex.toString().contains("Payload must not be null")) {
-				return null;
-			}
-
-			throw ex;
-		}
+		return typedUser.getPayload();
 	}
 
-	public User deleteUserById(String id)
-			throws InterruptedException, ExecutionException, TimeoutException, IllegalArgumentException {
-		try {
-			RequestReplyTypedMessageFuture<String, String, User> userFut = kafkaTemplate.sendAndReceive(
-					MessageBuilder.withPayload(id).setHeader(KafkaHeaders.TOPIC, deleteUserByIdTopic)
-							.setHeader(KafkaHeaders.REPLY_TOPIC, deleteUserByIdReplyTopic).build(),
-					new ParameterizedTypeReference<User>() {
-					});
+	public ServiceResponse<User> deleteUserById(String id) throws Exception {
+		Message<String> message = MessageBuilder.withPayload(id).setHeader(KafkaHeaders.TOPIC, deleteUserByIdTopic)
+				.setHeader(KafkaHeaders.REPLY_TOPIC, deleteUserByIdReplyTopic).build();
 
-			userFut.getSendFuture().get(10, TimeUnit.SECONDS);
+		ParameterizedTypeReference<ServiceResponse<User>> messageReturnType = new ParameterizedTypeReference<ServiceResponse<User>>() {
+		};
 
-			Message<User> typedUser = userFut.get(30, TimeUnit.SECONDS);
+		RequestReplyTypedMessageFuture<String, String, ServiceResponse<User>> userFut = kafkaTemplate
+				.sendAndReceive(message, messageReturnType);
 
-			User userFound = typedUser.getPayload();
+		userFut.getSendFuture().get(10, TimeUnit.SECONDS);
 
-			return userFound;
-		} catch (Exception ex) {
-			if (ex.toString().contains("Payload must not be null")) {
-				return null;
-			}
+		Message<ServiceResponse<User>> typedUser = userFut.get(30, TimeUnit.SECONDS);
 
-			throw ex;
-		}
+		return typedUser.getPayload();
 	}
 }
