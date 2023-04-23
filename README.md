@@ -6,33 +6,44 @@ API para gerenciamento dos recursos do e-commerce "Sparks".
 
 ## Configuração
 
-### Variáveis de ambiente
+**Obs:** Caso você esteja utilizando uma IDE que tenha suporte ao Maven ou ao Spring como o _SpringToolSuite4_ o processo todo vai ser quase que automático bastando somente você definir as variáveis de ambiente nas configurações de execução do projeto, tirando isso, um simples botão de Play vai colocar o projeto em execução.
 
-As variáveis de ambiente abaixo devem ser definidas para que a aplicação funcione corretamente:
+### Instalação
 
-- PORT: Porta em que a aplicação será executada. Por exemplo: 8081
-- KAFKA_BROKERS: Endereço IP dos brokers Kafka separados por vírgula. Por exemplo: localhost:9092,localhost:9093
-
-## Instalação
-
-Para instalar as dependências do projeto é necessário que tenha o Maven instalado em sua máquina ou utilize uma IDE que o tenha. Com isso em mãos, para instalar as dependências, basta executar o comando abaixo na raiz do projeto:
+Para que o projeto seja executado com sucesso é necessário instalar as dependências dele e para isso é preciso que você tenha o _Maven_ instalado em sua máquina. Com isso em mãos, para instalar as dependências, basta executar o comando abaixo na raiz do projeto:
 
 ```bash
 mvn clean install
 ```
 
-## Build
+### Build
 
-Para buildar o projeto basta executar o comando abaixo na raiz do projeto:
+Antes de executar o projeto é necessário buildá-lo, para isso basta executar o comando abaixo na raiz do projeto:
 
 ```bash
 mvn package
 ```
 
-## Execução
+## Testes
 
-Para executar o arquivo jar gerado basta executar o comando abaixo dentro da pasta **_target_** do projeto:
+Para executar os testes do projeto basta executar o comando abaixo na raiz do projeto:
 
 ```bash
-java -jar api-<versao>.jar
+mvn test
+```
+
+## Execução
+
+Para executar o projeto basta executar o comando abaixo dentro da pasta _target_:
+
+**Modelo:**
+
+```bash
+java -Dspring.profiles.active=<Profile a ser executado (ex: dev, test, prod)> -DPORT=<Porta em que a aplicação irá rodar (ex: 8081)> -DKAFKA_BROKERS=<Endereços IPs dos brokers do Kafka (ex: localhost:9092)> -jar api-<versao>.jar
+```
+
+**Exemplo:**
+
+```bash
+java -Dspring.profiles.active=dev -DPORT=8081 -DKAFKA_BROKERS=localhost:9092 -jar api-1.0.0.jar
 ```

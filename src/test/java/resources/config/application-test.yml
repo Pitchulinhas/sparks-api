@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    default: dev
   kafka:
     consumer:
       group-id: sparks-api
