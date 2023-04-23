@@ -16,7 +16,7 @@ Para que o projeto seja executado com sucesso é necessário instalar as depend�
 mvn clean install
 ```
 
-### Build
+## Build
 
 Antes de executar o projeto é necessário buildá-lo, para isso basta executar o comando abaixo na raiz do projeto:
 
@@ -39,11 +39,19 @@ Para executar o projeto basta executar o comando abaixo dentro da pasta _target_
 **Modelo:**
 
 ```bash
-java -Dspring.profiles.active=<Profile a ser executado (ex: dev, test, prod)> -DPORT=<Porta em que a aplicação irá rodar (ex: 8081)> -DKAFKA_BROKERS=<Endereços IPs dos brokers do Kafka (ex: localhost:9092)> -jar api-<versao>.jar
+java \
+    -Dspring.profiles.active=<Profile a ser executado (ex: dev, test, prod)> \
+    -DPORT=<Porta em que a aplicação irá rodar (ex: 8081)> \
+    -DKAFKA_BROKERS=<Endereços IPs dos brokers do Kafka (ex: localhost:9092)> \
+    -jar api-<versao>.jar
 ```
 
 **Exemplo:**
 
 ```bash
-java -Dspring.profiles.active=dev -DPORT=8081 -DKAFKA_BROKERS=localhost:9092 -jar api-1.0.0.jar
+java \
+    -Dspring.profiles.active=dev \
+    -DPORT=8081 \
+    -DKAFKA_BROKERS=localhost:9092 \
+    -jar api-1.0.0.jar
 ```
