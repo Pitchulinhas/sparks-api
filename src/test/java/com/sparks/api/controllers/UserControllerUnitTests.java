@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.Gson;
@@ -25,7 +24,6 @@ import com.sparks.api.exceptions.NotFoundException;
 import com.sparks.api.services.UserService;
 
 @WebMvcTest(UserController.class)
-@ActiveProfiles("test")
 public class UserControllerUnitTests implements IUserControllerUnitTests {
 	@Autowired
 	private MockMvc mockMvc;
