@@ -1,7 +1,8 @@
+server:
+  port: ${PORT}
 spring:
-  profiles:
-    default: dev
   kafka:
+    bootstrap-servers: ${KAFKA_BROKERS}
     consumer:
       group-id: sparks-api
     topics:

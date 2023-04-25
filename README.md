@@ -13,7 +13,7 @@ API para gerenciamento dos recursos do e-commerce "Sparks".
 Para que o projeto seja executado com sucesso é necessário instalar as dependências dele e para isso é preciso que você tenha o _Maven_ instalado em sua máquina. Com isso em mãos, para instalar as dependências, basta executar o comando abaixo na raiz do projeto:
 
 ```bash
-mvn clean install
+mvn -Dmaven.test.skip=true clean install
 ```
 
 ## Build
@@ -21,15 +21,29 @@ mvn clean install
 Antes de executar o projeto é necessário buildá-lo, para isso basta executar o comando abaixo na raiz do projeto:
 
 ```bash
-mvn package
+mvn -Dmaven.test.skip=true clean package
 ```
 
 ## Testes
 
 Para executar os testes do projeto basta executar o comando abaixo na raiz do projeto:
 
+**Modelo:**
+
 ```bash
-mvn test
+mvn \
+    -DPORT=<Porta em que a aplicação irá rodar (ex: 8081)> \
+    -DKAFKA_BROKERS=<Endereços dos servidores Kafka separados por vírgula (ex: localhost:9092)> \
+test
+```
+
+**Exemplo:**
+
+```bash
+mvn \
+    -DPORT=8081 \
+    -DKAFKA_BROKERS=localhost:9092 \
+test
 ```
 
 ## Execução
@@ -40,9 +54,8 @@ Para executar o projeto basta executar o comando abaixo dentro da pasta _target_
 
 ```bash
 java \
-    -Dspring.profiles.active=<Profile a ser executado (ex: dev, test, prod)> \
     -DPORT=<Porta em que a aplicação irá rodar (ex: 8081)> \
-    -DKAFKA_BROKERS=<Endereços IPs dos brokers do Kafka (ex: localhost:9092)> \
+    -DKAFKA_BROKERS=<Endereços dos servidores Kafka separados por vírgula (ex: localhost:9092)> \
     -jar api-<versao>.jar
 ```
 
@@ -50,7 +63,6 @@ java \
 
 ```bash
 java \
-    -Dspring.profiles.active=dev \
     -DPORT=8081 \
     -DKAFKA_BROKERS=localhost:9092 \
     -jar api-1.0.0.jar
