@@ -17,7 +17,7 @@ import com.sparks.api.exceptions.NotFoundException;
 import com.sparks.api.producers.UserProducer;
 import com.sparks.api.responses.ServiceResponse;
 
-@SpringBootTest
+@SpringBootTest(classes = UserService.class)
 public class UserServiceUnitTests implements IUserServiceUnitTests {
 	@Autowired
 	private UserService userService;
@@ -123,7 +123,7 @@ public class UserServiceUnitTests implements IUserServiceUnitTests {
 
 		Mockito.when(userProducer.updateUserById("64441357327a68740d94ac26", updateUserByIdInput))
 				.thenReturn(updateUserByIdResponse);
-		Mockito.when(userProducer.updateUserById("64441357327a68740d94ac26", updateUserWithExistingEmailByIdInput))
+		Mockito.when(userProducer.updateUserById("64441357327a68740d94ac25", updateUserWithExistingEmailByIdInput))
 				.thenReturn(updateUserWithExistingEmailByIdResponse);
 		Mockito.when(userProducer.updateUserById("64441357327a68740d94ac27", updateUserByIdInput))
 				.thenReturn(updateUserThatDoesNotExistByIdResponse);
@@ -215,7 +215,7 @@ public class UserServiceUnitTests implements IUserServiceUnitTests {
 		updateUserInput.setEmail("email2023@example.com");
 
 		Assertions.assertThrows(BadRequestException.class, () -> {
-			this.userService.updateUserById("64441357327a68740d94ac26", updateUserInput);
+			this.userService.updateUserById("64441357327a68740d94ac25", updateUserInput);
 		});
 	}
 

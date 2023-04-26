@@ -99,10 +99,11 @@ public class UserControllerUnitTests implements IUserControllerUnitTests {
 		Mockito.when(userService.findUserById("64441357327a68740d94ac27"))
 				.thenThrow(new NotFoundException("Usuário não encontrado"));
 
-		Mockito.when(userService.updateUserById("64441357327a68740d94ac26", updateUserByIdInput)).thenReturn(userUpdatedById);
+		Mockito.when(userService.updateUserById("64441357327a68740d94ac26", updateUserByIdInput))
+				.thenReturn(userUpdatedById);
 		Mockito.when(userService.updateUserById("64441357327a68740d94ac27", updateUserByIdInput))
 				.thenThrow(new NotFoundException("Usuário não encontrado"));
-		Mockito.when(userService.updateUserById("64441357327a68740d94ac26", updateUserWithExistingEmailByIdInput))
+		Mockito.when(userService.updateUserById("64441357327a68740d94ac25", updateUserWithExistingEmailByIdInput))
 				.thenThrow(new BadRequestException("Já existe um usuário com esse e-mail"));
 
 		Mockito.when(userService.deleteUserById("64441357327a68740d94ac26")).thenReturn(userDeletedById);
@@ -197,7 +198,7 @@ public class UserControllerUnitTests implements IUserControllerUnitTests {
 		updateUserInput.setEmail("email2023@example.com");
 
 		this.mockMvc
-				.perform(put("/users/{id}", "64441357327a68740d94ac26").contentType(MediaType.APPLICATION_JSON)
+				.perform(put("/users/{id}", "64441357327a68740d94ac25").contentType(MediaType.APPLICATION_JSON)
 						.content(gson.toJson(updateUserInput)))
 				.andExpect(status().isBadRequest()).andExpect(jsonPath("$", notNullValue()))
 				.andExpect(jsonPath("$.error", notNullValue()))

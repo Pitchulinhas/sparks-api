@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 public class Product {
 	private String id;
 	private String name;
-	private Float price;
+	private Double price;
+	private String barCode;
 	private String picture;
 	private Integer available;
 
@@ -16,6 +17,7 @@ public class Product {
 		this.id = product.id;
 		this.name = product.name;
 		this.price = product.price;
+		this.barCode = product.barCode;
 		this.picture = product.picture;
 		this.available = product.available;
 	}

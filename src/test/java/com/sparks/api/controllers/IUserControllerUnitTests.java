@@ -13,9 +13,9 @@ public interface IUserControllerUnitTests {
 
 	public void shouldUpdateUserById() throws Exception;
 
-	public void shouldReturnNotFoundStatusCodeWhenUpdatingUserByIdAndUserDoesNotExist() throws Exception;
-
 	public void shouldReturnBadRequestStatusCodeWhenUpdatingUserByIdAndEmailAlreadyExists() throws Exception;
+
+	public void shouldReturnNotFoundStatusCodeWhenUpdatingUserByIdAndUserDoesNotExist() throws Exception;
 
 	public void shouldDeleteUserById() throws Exception;
 
