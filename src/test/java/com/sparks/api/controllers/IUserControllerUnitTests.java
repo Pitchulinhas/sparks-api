@@ -13,6 +13,8 @@ public interface IUserControllerUnitTests {
 
 	public void shouldUpdateUserById() throws Exception;
 
+	public void shouldReturnBadRequestStatusCodeWhenUpdatingUserByIdAndCpfAlreadyExists() throws Exception;
+	
 	public void shouldReturnBadRequestStatusCodeWhenUpdatingUserByIdAndEmailAlreadyExists() throws Exception;
 
 	public void shouldReturnNotFoundStatusCodeWhenUpdatingUserByIdAndUserDoesNotExist() throws Exception;

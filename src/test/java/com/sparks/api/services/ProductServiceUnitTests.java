@@ -241,9 +241,9 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 	@Test
 	public void shouldThrowBadRequestExceptionWhenUpdatingProductByIdAndBarCodeAlreadyExists() throws Exception {
 		Product updateProductInput = new Product();
-		
+
 		updateProductInput.setBarCode("17896393601012");
-		
+
 		Assertions.assertThrows(BadRequestException.class, () -> {
 			this.productService.updateProductById("64441357327a68740d94ac26", updateProductInput);
 		});
@@ -259,7 +259,6 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 			this.productService.updateProductById("64441357327a68740d94ac27", updateProductInput);
 		});
 	}
-
 
 	@Test
 	public void shouldDeleteProductById() throws Exception {

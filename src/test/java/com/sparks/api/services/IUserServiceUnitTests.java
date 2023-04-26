@@ -15,6 +15,8 @@ public interface IUserServiceUnitTests {
 
 	public void shouldThrowNotFoundExceptionWhenUpdatingUserByIdAndUserDoesNotExist() throws Exception;
 
+	public void shouldThrowBadRequestExceptionWhenUpdatingUserByIdAndCpfAlreadyExists() throws Exception;
+	
 	public void shouldThrowBadRequestExceptionWhenUpdatingUserByIdAndEmailAlreadyExists() throws Exception;
 
 	public void shouldDeleteUserById() throws Exception;
