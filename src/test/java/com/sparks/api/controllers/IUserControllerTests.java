@@ -1,6 +1,6 @@
 package com.sparks.api.controllers;
 
-public interface IUserControllerUnitTests {
+public interface IUserControllerTests {
 	public void shouldCreateUser() throws Exception;
 
 	public void shouldReturnBadRequestStatusCodeWhenCreatingUserAndEmailAlreadyExists() throws Exception;

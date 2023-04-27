@@ -1,6 +1,6 @@
 package com.sparks.api.services;
 
-public interface IProductServiceUnitTests {
+public interface IProductServiceTests {
 	public void shouldCreateProduct() throws Exception;
 
 	public void shouldThrowBadRequestExceptionWhenCreatingProductAndBarCodeAlreadyExists() throws Exception;

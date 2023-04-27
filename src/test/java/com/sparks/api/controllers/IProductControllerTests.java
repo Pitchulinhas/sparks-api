@@ -1,6 +1,6 @@
 package com.sparks.api.controllers;
 
-public interface IProductControllerUnitTests {
+public interface IProductControllerTests {
 	public void shouldCreateProduct() throws Exception;
 
 	public void shouldReturnBadRequestStatusCodeWhenCreatingProductAndBarCodeAlreadyExists() throws Exception;

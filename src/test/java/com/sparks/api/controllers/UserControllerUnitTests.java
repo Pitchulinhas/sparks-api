@@ -24,7 +24,7 @@ import com.sparks.api.exceptions.NotFoundException;
 import com.sparks.api.services.UserService;
 
 @WebMvcTest(UserController.class)
-public class UserControllerUnitTests implements IUserControllerUnitTests {
+public class UserControllerUnitTests implements IUserControllerTests {
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -42,11 +42,11 @@ public class UserControllerUnitTests implements IUserControllerUnitTests {
 		User previouslyCreatedUser = new User();
 
 		previouslyCreatedUser.setId("64441357327a68740d94ac26");
-		previouslyCreatedUser.setName("André Silva");
+		previouslyCreatedUser.setName("Beatriz Ferreira");
 		previouslyCreatedUser.setCpf("123.456.789-11");
 		previouslyCreatedUser.setPhone("(11) 91111-1111");
-		previouslyCreatedUser.setEmail("andres@email.com");
-		previouslyCreatedUser.setPassword("Andre@2023");
+		previouslyCreatedUser.setEmail("beatrizf@email.com");
+		previouslyCreatedUser.setPassword("Beatriz@2023");
 
 		/////////////////
 		// Create user //
@@ -57,7 +57,7 @@ public class UserControllerUnitTests implements IUserControllerUnitTests {
 		createUserInput.setName("André Sousa");
 		createUserInput.setCpf("123.456.789-12");
 		createUserInput.setPhone("(22) 92222-2222");
-		createUserInput.setEmail("andresousa@email.com");
+		createUserInput.setEmail("andres@email.com");
 		createUserInput.setPassword("Andre@2023");
 
 		User userCreated = new User(createUserInput);
@@ -72,10 +72,10 @@ public class UserControllerUnitTests implements IUserControllerUnitTests {
 
 		User createUserWithExistingCpfInput = new User();
 
-		createUserWithExistingCpfInput.setName("André Silva");
-		createUserWithExistingCpfInput.setCpf("123.456.789-11");
-		createUserWithExistingCpfInput.setPhone("(11) 91111-1112");
-		createUserWithExistingCpfInput.setEmail("andres@email.com");
+		createUserWithExistingCpfInput.setName("André Sousa");
+		createUserWithExistingCpfInput.setCpf("123.456.789-12");
+		createUserWithExistingCpfInput.setPhone("(22) 92222-2223");
+		createUserWithExistingCpfInput.setEmail("andresousa@email.com");
 		createUserWithExistingCpfInput.setPassword("Andre@2023");
 
 		Mockito.when(userService.createUser(createUserWithExistingCpfInput))
@@ -89,7 +89,7 @@ public class UserControllerUnitTests implements IUserControllerUnitTests {
 
 		createUserWithExistingEmailInput.setName("André Silva");
 		createUserWithExistingEmailInput.setCpf("123.456.789-13");
-		createUserWithExistingEmailInput.setPhone("(11) 91111-1112");
+		createUserWithExistingEmailInput.setPhone("(33) 93333-3333");
 		createUserWithExistingEmailInput.setEmail("andres@email.com");
 		createUserWithExistingEmailInput.setPassword("Andre@2023");
 
@@ -189,7 +189,7 @@ public class UserControllerUnitTests implements IUserControllerUnitTests {
 		createUserInput.setName("André Sousa");
 		createUserInput.setCpf("123.456.789-12");
 		createUserInput.setPhone("(22) 92222-2222");
-		createUserInput.setEmail("andresousa@email.com");
+		createUserInput.setEmail("andres@email.com");
 		createUserInput.setPassword("Andre@2023");
 
 		this.mockMvc
@@ -201,10 +201,10 @@ public class UserControllerUnitTests implements IUserControllerUnitTests {
 	public void shouldReturnBadRequestStatusCodeWhenCreatingUserAndCpfAlreadyExists() throws Exception {
 		User createUserInput = new User();
 
-		createUserInput.setName("André Silva");
-		createUserInput.setCpf("123.456.789-11");
-		createUserInput.setPhone("(11) 91111-1112");
-		createUserInput.setEmail("andres@email.com");
+		createUserInput.setName("André Sousa");
+		createUserInput.setCpf("123.456.789-12");
+		createUserInput.setPhone("(22) 92222-2223");
+		createUserInput.setEmail("andresousa@email.com");
 		createUserInput.setPassword("Andre@2023");
 
 		this.mockMvc
@@ -220,7 +220,7 @@ public class UserControllerUnitTests implements IUserControllerUnitTests {
 
 		createUserInput.setName("André Silva");
 		createUserInput.setCpf("123.456.789-13");
-		createUserInput.setPhone("(11) 91111-1112");
+		createUserInput.setPhone("(33) 93333-3333");
 		createUserInput.setEmail("andres@email.com");
 		createUserInput.setPassword("Andre@2023");
 
@@ -283,7 +283,7 @@ public class UserControllerUnitTests implements IUserControllerUnitTests {
 	public void shouldReturnBadRequestStatusCodeWhenUpdatingUserByIdAndEmailAlreadyExists() throws Exception {
 		User updateUserInput = new User();
 
-		updateUserInput.setEmail("andres@email.com");
+		updateUserInput.setEmail("beatrizf@email.com");
 
 		this.mockMvc
 				.perform(put("/users/{id}", "64441357327a68740d94ac27").contentType(MediaType.APPLICATION_JSON)

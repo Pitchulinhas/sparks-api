@@ -1,6 +1,6 @@
 package com.sparks.api.services;
 
-public interface IUserServiceUnitTests {
+public interface IUserServiceTests {
 	public void shouldCreateUser() throws Exception;
 
 	public void shouldThrowBadRequestExceptionWhenCreatingUserAndEmailAlreadyExists() throws Exception;

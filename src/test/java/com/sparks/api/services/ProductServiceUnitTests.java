@@ -18,7 +18,7 @@ import com.sparks.api.producers.ProductProducer;
 import com.sparks.api.responses.ServiceResponse;
 
 @SpringBootTest(classes = ProductService.class)
-public class ProductServiceUnitTests implements IProductServiceUnitTests {
+public class ProductServiceUnitTests implements IProductServiceTests {
 	@Autowired
 	private ProductService productService;
 
@@ -27,47 +27,32 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 
 	@BeforeEach
 	public void setup() throws Exception {
-		// Objects
+		Product previouslyCreatedProduct = new Product();
 
-		Product product1 = new Product();
+		previouslyCreatedProduct.setId("64441357327a68740d94ac26");
+		previouslyCreatedProduct.setName("Arroz Caçarola Parbolizado 1Kg");
+		previouslyCreatedProduct.setBarCode("17896393601012");
+		previouslyCreatedProduct.setPrice(4.25);
+		previouslyCreatedProduct
+				.setPicture("https://supermercadojequie.com/image/cache/catalog/produtos/7896393601046-1000x1000.jpg");
+		previouslyCreatedProduct.setAvailable(1000);
 
-		product1.setId("64441357327a68740d94ac25");
-		product1.setName("Arroz Caçarola Parbolizado 1Kg");
-		product1.setBarCode("17896393601012");
-		product1.setPrice(4.45);
-		product1.setPicture("https://supermercadojequie.com/image/cache/catalog/produtos/7896393601046-1000x1000.jpg");
-		product1.setAvailable(1000);
-
-		Product product2 = new Product();
-
-		product2.setId("64441357327a68740d94ac26");
-		product2.setName("Arroz Kika Parbolizado 1Kg");
-		product2.setBarCode("7897586400026");
-		product2.setPicture(
-				"https://lojacentraldealimentos.com.br/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/k/i/kika30.jpg");
-		product2.setPrice(4.25);
-		product2.setAvailable(1000);
-
-		Product product3 = new Product();
-
-		product3.setId("64441357327a68740d94ac27");
-		product3.setName("Arroz Urbano Parbolizado 1Kg");
-		product3.setBarCode("7896038306558");
-		product3.setPicture("https://statics.angeloni.com.br/super/files/produtos/629103/629103_1_zoom.jpg");
-		product3.setPrice(4.75);
-		product3.setAvailable(1000);
-
-		// Create product
+		////////////////////
+		// Create product //
+		////////////////////
 
 		Product createProductInput = new Product();
 
-		createProductInput.setName(product2.getName());
-		createProductInput.setBarCode(product2.getBarCode());
-		createProductInput.setPrice(product2.getPrice());
-		createProductInput.setPicture(product2.getPicture());
-		createProductInput.setAvailable(product2.getAvailable());
+		createProductInput.setName("Arroz Kika Parbolizado 1Kg");
+		createProductInput.setBarCode("7897586400026");
+		createProductInput.setPicture(
+				"https://lojacentraldealimentos.com.br/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/k/i/kika30.jpg");
+		createProductInput.setPrice(4.25);
+		createProductInput.setAvailable(1000);
 
-		Product productCreated = new Product(product2);
+		Product productCreated = new Product(createProductInput);
+
+		productCreated.setId("64441357327a68740d94ac27");
 
 		ServiceResponse<Product> createProductResponse = new ServiceResponse<>();
 
@@ -75,15 +60,18 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 
 		Mockito.when(productProducer.createProduct(createProductInput)).thenReturn(createProductResponse);
 
-		// Create product with existing bar code
+		///////////////////////////////////////////
+		// Create product with existing bar code //
+		///////////////////////////////////////////
 
 		Product createProductWithExistingBarCodeInput = new Product();
 
-		createProductWithExistingBarCodeInput.setName(product3.getName());
-		createProductWithExistingBarCodeInput.setBarCode(product1.getBarCode());
-		createProductWithExistingBarCodeInput.setPrice(product3.getPrice());
-		createProductWithExistingBarCodeInput.setPicture(product3.getPicture());
-		createProductWithExistingBarCodeInput.setAvailable(product3.getAvailable());
+		createProductWithExistingBarCodeInput.setName("Arroz Kika Parbolizado 1Kg");
+		createProductWithExistingBarCodeInput.setBarCode("7897586400026");
+		createProductWithExistingBarCodeInput.setPicture(
+				"https://lojacentraldealimentos.com.br/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/k/i/kika30.jpg");
+		createProductWithExistingBarCodeInput.setPrice(4.35);
+		createProductWithExistingBarCodeInput.setAvailable(1000);
 
 		ServiceResponse<Product> createProductWithExistingBarCodeResponse = new ServiceResponse<>();
 
@@ -92,9 +80,11 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 		Mockito.when(productProducer.createProduct(createProductWithExistingBarCodeInput))
 				.thenReturn(createProductWithExistingBarCodeResponse);
 
-		// Find all products
+		///////////////////////
+		// Find all products //
+		///////////////////////
 
-		List<Product> productsFound = Arrays.asList(product1, product2);
+		List<Product> productsFound = Arrays.asList(previouslyCreatedProduct, productCreated);
 
 		ServiceResponse<List<Product>> findAllProductsResponse = new ServiceResponse<>();
 
@@ -102,30 +92,36 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 
 		Mockito.when(productProducer.findAllProducts()).thenReturn(findAllProductsResponse);
 
-		// Find product by id
+		////////////////////////
+		// Find product by id //
+		////////////////////////
 
-		Product productFoundById = new Product(product1);
+		Product productFoundById = new Product(productCreated);
 
 		ServiceResponse<Product> findProductByIdResponse = new ServiceResponse<>();
 
 		findProductByIdResponse.setData(productFoundById);
 
-		Mockito.when(productProducer.findProductById(product1.getId())).thenReturn(findProductByIdResponse);
+		Mockito.when(productProducer.findProductById(productCreated.getId())).thenReturn(findProductByIdResponse);
 
-		// Find product that does not exist by id
+		////////////////////////////////////////////
+		// Find product that does not exist by id //
+		////////////////////////////////////////////
 
 		ServiceResponse<Product> findProductThatDoesNotExistByIdResponse = new ServiceResponse<>();
 
-		Mockito.when(productProducer.findProductById(product3.getId()))
+		Mockito.when(productProducer.findProductById("64441357327a68740d94ac28"))
 				.thenReturn(findProductThatDoesNotExistByIdResponse);
 
-		// Update product by id
+		//////////////////////////
+		// Update product by id //
+		//////////////////////////
 
 		Product updateProductByIdInput = new Product();
 
 		updateProductByIdInput.setAvailable(900);
 
-		Product productUpdatedById = new Product(product1);
+		Product productUpdatedById = new Product(productCreated);
 
 		productUpdatedById.setAvailable(900);
 
@@ -133,30 +129,42 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 
 		updateProductByIdResponse.setData(productUpdatedById);
 
-		Mockito.when(productProducer.updateProductById(product1.getId(), updateProductByIdInput))
+		Mockito.when(productProducer.updateProductById(productCreated.getId(), updateProductByIdInput))
 				.thenReturn(updateProductByIdResponse);
 
-		// Update product with existing bar code by id
+		/////////////////////////////////////////////////
+		// Update product with existing bar code by id //
+		/////////////////////////////////////////////////
 
 		Product updateProductWithExistingBarCodeByIdInput = new Product();
 
-		updateProductWithExistingBarCodeByIdInput.setBarCode(product1.getBarCode());
+		updateProductWithExistingBarCodeByIdInput.setBarCode(previouslyCreatedProduct.getBarCode());
 
 		ServiceResponse<Product> updateProductWithExistingBarCodeByIdResponse = new ServiceResponse<>();
 
 		updateProductWithExistingBarCodeByIdResponse.setErrorMessage("Já existe um produto com esse código de barras");
 
-		Mockito.when(productProducer.updateProductById(product2.getId(), updateProductWithExistingBarCodeByIdInput))
+		Mockito.when(
+				productProducer.updateProductById(productCreated.getId(), updateProductWithExistingBarCodeByIdInput))
 				.thenReturn(updateProductWithExistingBarCodeByIdResponse);
 
-		// Update product that does not exist by id
+		//////////////////////////////////////////////
+		// Update product that does not exist by id //
+		//////////////////////////////////////////////
+
+		Product updateProductThatDoesNotExistByIdInput = new Product();
+
+		updateProductThatDoesNotExistByIdInput.setAvailable(900);
 
 		ServiceResponse<Product> updateProductThatDoesNotExistByIdResponse = new ServiceResponse<>();
 
-		Mockito.when(productProducer.updateProductById(product3.getId(), updateProductByIdInput))
+		Mockito.when(
+				productProducer.updateProductById("64441357327a68740d94ac28", updateProductThatDoesNotExistByIdInput))
 				.thenReturn(updateProductThatDoesNotExistByIdResponse);
 
-		// Delete product by id
+		//////////////////////////
+		// Delete product by id //
+		//////////////////////////
 
 		Product productDeletedById = new Product(productUpdatedById);
 
@@ -164,13 +172,15 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 
 		deleteProductByIdResponse.setData(productDeletedById);
 
-		Mockito.when(productProducer.deleteProductById(product1.getId())).thenReturn(deleteProductByIdResponse);
+		Mockito.when(productProducer.deleteProductById(productCreated.getId())).thenReturn(deleteProductByIdResponse);
 
-		// Delete product that does not exist by id
+		//////////////////////////////////////////////
+		// Delete product that does not exist by id //
+		//////////////////////////////////////////////
 
 		ServiceResponse<Product> deleteProductThatDoesNotExistByIdResponse = new ServiceResponse<>();
 
-		Mockito.when(productProducer.deleteProductById(product3.getId()))
+		Mockito.when(productProducer.deleteProductById("64441357327a68740d94ac28"))
 				.thenReturn(deleteProductThatDoesNotExistByIdResponse);
 	}
 
@@ -194,10 +204,11 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 	public void shouldThrowBadRequestExceptionWhenCreatingProductAndBarCodeAlreadyExists() throws Exception {
 		Product createProductInput = new Product();
 
-		createProductInput.setName("Arroz Urbano Parbolizado 1Kg");
-		createProductInput.setBarCode("17896393601012");
-		createProductInput.setPicture("https://statics.angeloni.com.br/super/files/produtos/629103/629103_1_zoom.jpg");
-		createProductInput.setPrice(4.75);
+		createProductInput.setName("Arroz Kika Parbolizado 1Kg");
+		createProductInput.setBarCode("7897586400026");
+		createProductInput.setPicture(
+				"https://lojacentraldealimentos.com.br/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/k/i/kika30.jpg");
+		createProductInput.setPrice(4.35);
 		createProductInput.setAvailable(1000);
 
 		Assertions.assertThrows(BadRequestException.class, () -> {
@@ -214,7 +225,7 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 
 	@Test
 	public void shouldFindProductById() throws Exception {
-		Product productFound = this.productService.findProductById("64441357327a68740d94ac25");
+		Product productFound = this.productService.findProductById("64441357327a68740d94ac27");
 
 		Assertions.assertNotNull(productFound);
 	}
@@ -222,7 +233,7 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 	@Test
 	public void shouldThrowNotFoundExceptionWhenFindingProductByIdAndProductDoesNotExist() throws Exception {
 		Assertions.assertThrows(NotFoundException.class, () -> {
-			this.productService.findProductById("64441357327a68740d94ac27");
+			this.productService.findProductById("64441357327a68740d94ac28");
 		});
 	}
 
@@ -232,7 +243,7 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 
 		updateProductInput.setAvailable(900);
 
-		Product productUpdated = this.productService.updateProductById("64441357327a68740d94ac25", updateProductInput);
+		Product productUpdated = this.productService.updateProductById("64441357327a68740d94ac27", updateProductInput);
 
 		Assertions.assertNotNull(productUpdated);
 		Assertions.assertEquals(updateProductInput.getAvailable(), productUpdated.getAvailable());
@@ -245,7 +256,7 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 		updateProductInput.setBarCode("17896393601012");
 
 		Assertions.assertThrows(BadRequestException.class, () -> {
-			this.productService.updateProductById("64441357327a68740d94ac26", updateProductInput);
+			this.productService.updateProductById("64441357327a68740d94ac27", updateProductInput);
 		});
 	}
 
@@ -256,13 +267,13 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 		updateProductInput.setAvailable(900);
 
 		Assertions.assertThrows(NotFoundException.class, () -> {
-			this.productService.updateProductById("64441357327a68740d94ac27", updateProductInput);
+			this.productService.updateProductById("64441357327a68740d94ac28", updateProductInput);
 		});
 	}
 
 	@Test
 	public void shouldDeleteProductById() throws Exception {
-		Product productDeleted = this.productService.deleteProductById("64441357327a68740d94ac25");
+		Product productDeleted = this.productService.deleteProductById("64441357327a68740d94ac27");
 
 		Assertions.assertNotNull(productDeleted);
 	}
@@ -270,7 +281,7 @@ public class ProductServiceUnitTests implements IProductServiceUnitTests {
 	@Test
 	public void shouldThrowNotFoundExceptionWhenDeletingProductByIdAndProductDoesNotExist() throws Exception {
 		Assertions.assertThrows(NotFoundException.class, () -> {
-			this.productService.deleteProductById("64441357327a68740d94ac27");
+			this.productService.deleteProductById("64441357327a68740d94ac28");
 		});
 	}
 }
